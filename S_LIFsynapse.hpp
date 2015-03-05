@@ -38,16 +38,15 @@ class S_LIFsynapse {
     
     // synapse logic for delay for recently spiked neuron
     double xt = 0.0;
-    double delay = engine::synapse_value(index, "delay");
+    //double delay = engine::synapse_value(index, "delay");
 
     int neuron_index = engine::synapse_value(index, "pre");
-    double last_spike = engine::neuron_value(neuron_index, "last_spike");
+    //double last_spike = engine::neuron_value(neuron_index, "last_spike");
     int spiked = engine::neuron_value(neuron_index, "spike");
 
     
-    if ((t - last_spike > delay) && (spiked == 1)){
+    if ((spiked == 1)){ //(t - last_spike > delay) && 
       xt = 1.0;
-      engine::neuron_value(neuron_index, "spike", 0);
     }
     else{
       xt = 0.0;
@@ -68,7 +67,7 @@ class S_LIFsynapse {
     // ODE set
     
     //cout<<"time:"<<t<<"\tg1:"<<g1<<"\tg2:"<<g2<<"\tf(g1,g2):"<<-(2*tau_psp*g2+g1-gsyn*xt)/(tau_psp*tau_psp)<<endl;  //debug
-    //cout<<g1<<","<<g2<<","<<-(2*tau_psp*g2+g1-gsyn*xt)/(tau_psp*tau_psp)<<endl;  //debug
+    //cout<<g1<<","<<g2<<","<<-(2*tau_psp*g2+g1-gsyn*xt)/(tau_psp*tau_psp)<<"\n";  //debug
     
     dxdt[g1_index] = g2;
     dxdt[g2_index] =-(2*tau_psp*g2+g1-gsyn*xt)/(tau_psp*tau_psp);

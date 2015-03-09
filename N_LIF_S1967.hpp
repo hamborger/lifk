@@ -69,7 +69,7 @@ class N_LIF_S1967 {
     I_Syn = I_Syn - random::rand(1e-3*20000*(0.88*2 - 0.12*12.5)*0.14,sqrt(1e-3*20000*(0.88*2 + 0.12*12.5)*0.14))*noise_weight;  // in mseconds
     
     double I_Ext = engine::neuron_value(index, "iext");    
-    double spike = engine::neuron_value(index, "spike");
+    int spike = engine::neuron_value(index, "spike");
     
     // ODE set & LIF-K neuron model equations
     if(t > t_rest) {
@@ -82,14 +82,14 @@ class N_LIF_S1967 {
     	     spike = 1;   
             engine::neuron_value(index, "t_rest", t+tau_ref);
             // Note the last spike time and number of times spiked
-            engine::neuron_value(index, "last_spike", t);
+            //engine::neuron_value(index, "last_spike", t);
             engine::neuron_value(index, "spike", spike);
         }
     }
     else {
        variables[v_index] = v_reset;
 	variables[gk_index] = gbar_k;
-	//engine::neuron_value(index, "spike", 0);
+	engine::neuron_value(index, "spike", 0);
     }  
     
     // Push I_Syn to engine for the output

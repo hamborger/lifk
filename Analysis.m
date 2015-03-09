@@ -3,12 +3,12 @@
 % Reading 
 listing = dir('*.dat');
 nGroups = 10;
-nN = 20;
+nN = 100;
 l_lst = length(listing);
 size(listing)
 for q=1:l_lst
     m = csvread(listing(q).name);
-    spikes = m(:,2+2*nGroups*nN:201+2*nGroups*nN);
+    spikes = m(:,2+2*nGroups*nN:(nGroups*nN+1)+2*nGroups*nN);
     imagesc(spikes)
     %PSTH
     %figure;

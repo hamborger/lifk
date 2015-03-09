@@ -12,7 +12,7 @@ for q=1:l_lst
   
     %PSTH
     %figure;
-    psth = zeros(nGroups,iters);
+    psth = zeros(nGroups,length(m(:,1)));
     for g = 1:nGroups
     %    subplot(nGroups,1,g);
         psth(:,g) = sum(:,spikes((g-1)*nN+1:g*nN));

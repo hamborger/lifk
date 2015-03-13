@@ -85,6 +85,9 @@ class N_LIF_S1967 {
             //engine::neuron_value(index, "last_spike", t);
             engine::neuron_value(index, "spike", spike);
         }
+        else{
+            engine::neuron_value(index, "spike", 0);
+        }
     }
     else {
        variables[v_index] = v_reset;

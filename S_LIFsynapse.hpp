@@ -45,7 +45,7 @@ class S_LIFsynapse {
     int spiked = engine::neuron_value(neuron_index, "spike");
 
     
-    if ((spiked == 1)){ //(t - last_spike > delay) && 
+    if ((spiked > 0.8)){ //(t - last_spike > delay) && 
       xt = 1.0;
     }
     else{

@@ -57,6 +57,7 @@ void configuration::observer::operator()(state_type &variables, const double t) 
   vector<int> indices = engine::get_indices("v");
   //vector<int> isyns = engine::get_indices("gk");     //print gk
   vector<double> isyns = engine::get_values("I_Syn");
+  vector<double> spike = engine::get_values("spike");
   assert(observer::outfile.is_open());
   
   observer::outfile << setprecision(4) << fixed << t;
@@ -65,6 +66,9 @@ void configuration::observer::operator()(state_type &variables, const double t) 
   }
   for(double val : isyns) {
     observer::outfile << ',' << setprecision(6) << fixed << val;//variables[val];
+  }
+  for(double sp : spike) {
+    observer::outfile << ',' << setprecision(1) << fixed << sp;//variables[val];
   }
   observer::outfile<<"\n";
 };
@@ -83,7 +87,7 @@ int main(int argc, char** argv) {
   
   using namespace boost::numeric::odeint;
   integrate_const(runge_kutta4<state_type>(), engine(), variables,
-                  0.0, 150.0, 0.01, configuration::observer(configuration::outstream));
+                  0.0, 75.0, 0.005, configuration::observer(configuration::outstream));
 
   configuration::finalize();
   return 0;

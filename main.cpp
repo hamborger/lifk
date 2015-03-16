@@ -87,7 +87,7 @@ int main(int argc, char** argv) {
   
   using namespace boost::numeric::odeint;
   integrate_const(runge_kutta4<state_type>(), engine(), variables,
-                  0.0, 75.0, 0.009, configuration::observer(configuration::outstream));
+                  0.0, 70.0, 0.05, configuration::observer(configuration::outstream));
 
   configuration::finalize();
   return 0;

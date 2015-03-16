@@ -1,3 +1,4 @@
+
 /*
  synapse/S_DefaultSynapse.hpp - Default non-specialized synapse with last spike logic
 
@@ -38,14 +39,18 @@ class S_LIFsynapse {
     
     // synapse logic for delay for recently spiked neuron
     double xt = 0.0;
-    //double delay = engine::synapse_value(index, "delay");
+    double delay = engine::synapse_value(index, "delay");
 
     int neuron_index = engine::synapse_value(index, "pre");
-    //double last_spike = engine::neuron_value(neuron_index, "last_spike");
-    int spiked = engine::neuron_value(neuron_index, "spike");
-
+    double last_spike = engine::neuron_value(neuron_index, "last_spike");
+    double spiked = engine::neuron_value(neuron_index, "spike");
+    double thresh = engine::synapse_value(index, "thresh");
     
-    if ((spiked > 0.8)){ //(t - last_spike > delay) && 
+    /*if (spiked >= thresh){
+      engine::neuron_value(neuron_index, "last_spike",t);
+    }*/
+    
+    if ((t - last_spike > delay) && (spiked >= thresh)){ // 
       xt = 1.0;
     }
     else{

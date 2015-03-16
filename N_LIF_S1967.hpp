@@ -51,6 +51,7 @@ class N_LIF_S1967 {
     double noise_weight = engine::neuron_value(index, "noise_weight");
     double syn_weight = engine::neuron_value(index, "syn_weight");
     double v_reset = engine::neuron_value(index, "v_reset");
+    double last_spike;
     
     vector<int> g1_indices = engine::get_pre_neuron_indices(index, "g1");       
     vector<double> esyn_values = engine::get_pre_neuron_values(index, "esyn");
@@ -69,7 +70,7 @@ class N_LIF_S1967 {
     I_Syn = I_Syn - random::rand(1e-3*20000*(0.88*2 - 0.12*12.5)*0.14,sqrt(1e-3*20000*(0.88*2 + 0.12*12.5)*0.14))*noise_weight;  // in mseconds
     
     double I_Ext = engine::neuron_value(index, "iext");    
-    int spike = engine::neuron_value(index, "spike");
+    double spike = engine::neuron_value(index, "spike");
     
     // ODE set & LIF-K neuron model equations
     if(t > t_rest) {
@@ -77,22 +78,22 @@ class N_LIF_S1967 {
             I_Ext = 0;
         }
        dxdt[v_index] = (-(v - v_rest) - gk*(v - e_k) + I_Ext - I_Syn ) / tau_m ;       // ode for V
-    	dxdt[gk_index] = -gk/tau_rel;                                                          // ode for gK 
-    	if(v >= v_th){
-    	     spike = 1;   
+    	dxdt[gk_index] = -gk/tau_rel;   // ode for gK 
+    	                                        
+    	if(v > v_th){
+    	     spike = v;   
             engine::neuron_value(index, "t_rest", t+tau_ref);
             // Note the last spike time and number of times spiked
-            //engine::neuron_value(index, "last_spike", t);
             engine::neuron_value(index, "spike", spike);
         }
         else{
-            engine::neuron_value(index, "spike", 0);
+            engine::neuron_value(index, "spike", v);
         }
     }
     else {
        variables[v_index] = v_reset;
 	variables[gk_index] = gbar_k;
-	engine::neuron_value(index, "spike", 0);
+	engine::neuron_value(index, "spike", v);
     }  
     
     // Push I_Syn to engine for the output

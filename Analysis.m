@@ -8,8 +8,7 @@ l_lst = length(listing);
 size(listing)
 for q=1:l_lst
     m = csvread(listing(q).name);
-    spikes = m(:,2+2*nGroups*nN:(nGroups*nN+1)+2*nGroups*nN);
-    imagesc(spikes)
+    spikes = m(:,2+2*nGroups*nN:(nGroups*nN+1)+2*nGroups*nN)>=-55.0;
     %PSTH
     %figure;
     psth = zeros(length(spikes(:,1)),nGroups);
@@ -32,6 +31,38 @@ for q=1:l_lst
     
     %fano factor calculation
     ff=va./mn;
+    figure;
+    title('Activity phase plane')
+    xlabel('groups')
+    ylabel('sigma')
+    plot(sqrt(va));
+    print('-dpng',sprintf('sigma %s.png',listing(q).name));
+    close();
+
+    figure;
+    title('Activity phase plane')
+    xlabel('groups')
+    ylabel('alpha')
+    plot(mn);
+    print('-dpng',sprintf('alpha %s.png',listing(q).name));
+    close();
+
+    figure;
+    title('Raster')
+    xlabel('time')
+    ylabel('Groups')
+    imagesc(spikes');
+    print('-dpng',sprintf('raster %s.png',listing(q).name));
+    close();
+    
+    figure;
+    title('Current')
+    xlabel('time')
+    ylabel('I')
+    imagesc(m(:,2+1*nGroups*nN:(nGroups*nN+1)+1*nGroups*nN)');
+    print('-dpng',sprintf('current %s.png',listing(q).name));
+    close();   
+    
     figure;
     title('Activity phase plane')
     xlabel('sigma')

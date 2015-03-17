@@ -46,7 +46,8 @@ class N_LIF_S1967 {
     double tau_rel = engine::neuron_value(index, "tau_rel");        
     double gbar_k = engine::neuron_value(index, "gbar_k");
     double e_k = engine::neuron_value(index, "e_k");    
-    double pulsewidth = engine::neuron_value(index, "pulsewidth");    
+    double start_pulsewidth = engine::neuron_value(index, "start_pulsewidth");    
+    double end_pulsewidth = engine::neuron_value(index, "end_pulsewidth");    
     double v_rest = engine::neuron_value(index, "v_rest");
     double noise_weight = engine::neuron_value(index, "noise_weight");
     double syn_weight = engine::neuron_value(index, "syn_weight");
@@ -74,7 +75,7 @@ class N_LIF_S1967 {
     
     // ODE set & LIF-K neuron model equations
     if(t > t_rest) {
-    	if(t>pulsewidth){        
+    	if((t<start_pulsewidth)&&(t>end_pulsewidth)){        
             I_Ext = 0;
         }
        dxdt[v_index] = (-(v - v_rest) - gk*(v - e_k) + I_Ext - I_Syn ) / tau_m ;       // ode for V

@@ -42,21 +42,21 @@ void conn_Syn(int G, int N)
     s_sets.close();
 }
 
-void conn_Neu(int G, int N)
+void conn_Neu(int G, int N, double alpha, double sigma)
 {
     ofstream n_sets;
     n_sets.open("nsets.conf");
     for(int i=0;i<N*G;i++)
-        if(i<N)	
+        if(i<alpha)	
         {
-            n_sets<<"dxdt:2,v:"<<-55<<",gk:0,v_reset:-70,last_spike:-1000,v_rest:-70,tau_ref:1,tau_rel:15,syn_weight:1.5,noise_weight:0";
-            n_sets<<",gbar_k:8,e_k:-65,v_th:"<<-55<<",t_rest:"<<0<<",spike:-55,iext:"<<140;
+            n_sets<<"dxdt:2,v:"<<-55<<",gk:0,v_reset:-70,last_spike:-1000,v_rest:-70,tau_ref:1,tau_rel:15,syn_weight:1,noise_weight:0";
+            n_sets<<",gbar_k:8,e_k:-65,v_th:"<<-55<<",t_rest:"<<normal(15,sigma)<<",spike:-55,iext:"<<140;
             n_sets<<",tau_m:"<<10;
-            n_sets<<",start_pulsewidth:"<<15<<",end_pulsewidth:"<<20<<";"<<"\n";   
+            n_sets<<",start_pulsewidth:"<<5<<",end_pulsewidth:"<<20<<";"<<"\n";   
         }
         else
         {
-            n_sets<<"dxdt:2,v:"<<-55.6<<",gk:0,v_reset:-70,last_spike:-1000,v_rest:-70,tau_ref:1,tau_rel:15,syn_weight:1.5,noise_weight:0";
+            n_sets<<"dxdt:2,v:"<<-55.6<<",gk:0,v_reset:-70,last_spike:-1000,v_rest:-70,tau_ref:1,tau_rel:15,syn_weight:1,noise_weight:0";
             n_sets<<",gbar_k:8,e_k:-65,v_th:"<<-55<<",t_rest:"<<0<<",spike:-55.6,iext:"<< 0;
             n_sets<<",tau_m:"<<10;
             n_sets<<",start_pulsewidth:"<<0<<",end_pulsewidth:"<<90<<";"<<"\n";   
@@ -68,7 +68,16 @@ int main()
 {
     int G=10;
     int N=100;
+    
+    double alpha;
+    double sigma;
+    
+    cout<<"alpha:";
+    cin>>alpha;
+    cout<<"\nsigma:";
+    cin>>sigma;    
+    
     conn_Syn(G,N);
-    conn_Neu(G,N);
+    conn_Neu(G,N,alpha,sigma);
     return 0;
 }

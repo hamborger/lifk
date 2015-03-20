@@ -14,3 +14,4 @@ echo "***Plot data***"
 time gnuplot "plot"
 
 echo "***Done***"
+python sms.py

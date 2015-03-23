@@ -21,7 +21,9 @@
 #ifndef INCLUDED_S_LIFSYNAPSE_HPP
 #define INCLUDED_S_LIFSYNAPSE_HPP
 
+#include "my_data_store.hpp"
 #include "core/engine.hpp"
+#include <cmath>
 
 namespace insilico {
 
@@ -46,16 +48,21 @@ class S_LIFsynapse {
     double spiked = engine::neuron_value(neuron_index, "spike");
     double thresh = engine::synapse_value(index, "thresh");
     
-    /*if (spiked >= thresh){
+    if (std::ceil(spiked) == std::ceil(thresh)){
       engine::neuron_value(neuron_index, "last_spike",t);
-    }*/
-    
-    if ((t - last_spike > delay) && (spiked >= thresh)){ // 
-      xt = 1.0;
     }
-    else{
-      xt = 0.0;
-    }  
+    
+    double utilized_spike = engine::synapse_value(index, "us");
+    
+    std::vector<double> stlist = data_store::spike_time_list[neuron_index];
+    
+    for(double time : stlist) {
+       if(t - time >= 5.0 && utilized_spike < time) {
+          xt = 1.0;
+          engine::synapse_value(index,"us", time);
+          break;
+       }
+    }
     
     /*if ((t - last_spiked > delay) && (spiked == 1)){           //if((t - last_spiked) <= delay){
       xt = 1.0;

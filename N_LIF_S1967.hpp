@@ -21,6 +21,7 @@
 #ifndef INCLUDED_N_LIF_S1967_HPP
 #define INCLUDED_N_LIF_S1967_HPP
 
+#include "my_data_store.hpp"
 #include "core/engine.hpp"
 #include <cmath>
 #include "core/random.hpp"
@@ -56,9 +57,6 @@ class N_LIF_S1967 {
     
     vector<int> g1_indices = engine::get_pre_neuron_indices(index, "g1");       
     vector<double> esyn_values = engine::get_pre_neuron_values(index, "esyn");
-      
-    
-
     
     // incoming synaptic currents
     double I_Syn = 0.0;
@@ -70,32 +68,35 @@ class N_LIF_S1967 {
     //cout<<I_Syn<<endl;
     I_Syn = I_Syn - random::rand(1e-3*20000*(0.88*2 - 0.12*12.5)*0.14,sqrt(1e-3*20000*(0.88*2 + 0.12*12.5)*0.14))*noise_weight;  // in mseconds
     
-    double I_Ext = engine::neuron_value(index, "iext");    
-    double spike = engine::neuron_value(index, "spike");
+    double I_Ext = engine::neuron_value(index, "iext");
     
     // ODE set & LIF-K neuron model equations
     if(t > t_rest) {
-    	if((t<start_pulsewidth)&&(t>end_pulsewidth)){        
+    	if((t<start_pulsewidth)||(t>end_pulsewidth)){        
             I_Ext = 0;
         }
        dxdt[v_index] = (-(v - v_rest) - gk*(v - e_k) + I_Ext - I_Syn ) / tau_m ;       // ode for V
     	dxdt[gk_index] = -gk/tau_rel;   // ode for gK 
     	                                        
     	if(v > v_th){
-    	     spike = v;   
             engine::neuron_value(index, "t_rest", t+tau_ref);
             // Note the last spike time and number of times spiked
-            engine::neuron_value(index, "spike", spike);
-        }
-        else{
-            engine::neuron_value(index, "spike", v);
+           
         }
     }
     else {
        variables[v_index] = v_reset;
 	variables[gk_index] = gbar_k;
-	engine::neuron_value(index, "spike", v);
+	
     }  
+    
+    if(v >= v_th) {
+       engine::neuron_value(index, "spike", 1);
+       data_store::spike_time_list[index].push_back(t);
+    }
+    else {
+       engine::neuron_value(index, "spike", 0);
+    }
     
     // Push I_Syn to engine for the output
     engine::neuron_value(index, "I_Syn", I_Syn);

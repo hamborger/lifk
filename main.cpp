@@ -21,6 +21,7 @@
 #include "core/configuration.hpp"
 #include "core/engine.hpp"
 
+#include "my_data_store.hpp"
 #include "neuron/N_LIF_S1967.hpp"
 #include "synapse/S_LIFsynapse.hpp"
 
@@ -68,10 +69,10 @@ void configuration::observer::operator()(state_type &variables, const double t) 
     observer::outfile << ',' << setprecision(6) << fixed << val;//variables[val];
   }
   for(double sp : spike) {
-    observer::outfile << ',' << setprecision(1) << fixed << sp;//variables[val];
+    observer::outfile << ',' << setprecision(6) << fixed << sp;//variables[val];
   }
   observer::outfile<<"\n";
-};
+}
 
 int main(int argc, char** argv) {
        
